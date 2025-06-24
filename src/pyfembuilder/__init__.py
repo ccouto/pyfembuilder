@@ -6,7 +6,7 @@ def version():
     return 'pyFEMStudio 2.0.0c (November 2023)'
 
 
-def write():
+def write(build_extension='.inp'):
     params=[]
     params_pass1=[] #this is new, we make a first pass to identify all variables, only the variables that do not contain any param from this list after the equal sign are considered params of the template
     max_line_parameters=0
@@ -220,9 +220,9 @@ def write():
                         #print(v)
                 #checks if file exist and if version is higher or lower
                 newer=True
-                if os.path.exists(cwd+"/"+Folder+"/"+Filename+'.inp'):
+                if os.path.exists(cwd+"/"+Folder+"/"+Filename+build_extension):
                     #
-                    f=open(cwd+"/"+Folder+"/"+Filename+'.inp')
+                    f=open(cwd+"/"+Folder+"/"+Filename+build_extension)
                     version_line=f.readline().replace("\n","")
                     print("line: "+version_line)
                     if 'version' in version_line:
@@ -253,7 +253,7 @@ def write():
                             #copy all the files except the template, to be changed by params...
                             copyfile(cwd + "/"+file_to_copy,cwd+"/"+Folder+"/"+file_to_copy)
 
-                    fn = open(cwd+"/"+Folder+"/"+Filename+'.inp',"w")
+                    fn = open(cwd+"/"+Folder+"/"+Filename+build_extension,"w")
                     print(f"!version={int(wb[w].cell(line_of_case,col_of_version).value)}", file=fn)
                     fn.writelines(template_lines)
                     fn.close()
