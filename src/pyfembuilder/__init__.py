@@ -3,7 +3,7 @@ import sys
 from shutil import copyfile
 
 def version():
-    return 'pyFEMStudio 2.0.0c (November 2023)'
+    return 'pyFEMStudio 2.0.3 (May 2026)'
 
 
 def write(build_extension='.inp'):
@@ -309,7 +309,12 @@ def read(testdispload=0):
 
     minver=-1
 
+    skipoutfile = False
+
     for m in sys.argv:
+        if 'skipout' in m.lower():
+            skipoutfile = True
+
         if 'ignoresuffix' in m.lower():
             print("Ignoring the suffix")
             filename_suffix=""
@@ -391,7 +396,10 @@ def read(testdispload=0):
             print(f'{line_of_case-NumberOfHeadRows}/{totalcases}')
             print(f'The case: {Folder}/{Filename}.out')
 
-            if os.path.exists(thefile+'.out'):
+            if skipoutfile:
+                reason = "skip_out"
+
+            if os.path.exists(thefile+'.out') and not skipoutfile:
                 #print(f'The case: {Folder}/{Filename}.out')
 
                 f=open(thefile+".out")
