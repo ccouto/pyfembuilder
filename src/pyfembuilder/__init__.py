@@ -3,7 +3,7 @@ import sys
 from shutil import copyfile
 
 def version():
-    return 'pyFEMStudio 2.0.3 (May 2026)'
+    return 'pyFEMStudio 2.0.4 (May 2026)'
 
 
 def write(build_extension='.inp'):
@@ -432,12 +432,18 @@ def read(testdispload=0):
                 alllines=f.readlines()
                 if len(alllines)>10:
                     for j in range(10,len(alllines)):
-                        arg=alllines[j].split(";")
+                        if ";" in alllines[j]:
+                            arg=alllines[j].split(";")
+                        else:
+                            arg=alllines[j].split(",")
                         valor=abs(float(arg[0].replace("\n","")))
                         mmax=max(mmax,valor)
                     print(mmax)
                     #print(alllines[len(alllines)-1])
-                    arg=alllines[len(alllines)-1].split(";")
+                    if ";" in alllines[j]:
+                        arg=alllines[len(alllines)-1].split(";")
+                    else:
+                        arg=alllines[len(alllines)-1].split(",")
                     mmin=abs(float(arg[-1].replace("\n","")))
                     if mmin==0: mmin=-1
                     valor=mmin/mmax
@@ -448,7 +454,7 @@ def read(testdispload=0):
                 f=open(thefile+'.csv')
                 #print("all ok!")
                 alllines=f.readlines()
-                arg=alllines[len(alllines)-1].replace('\n','').split(";")
+                arg=alllines[len(alllines)-1].replace('\n','').replace(",",";").split(";")
                 #print(arg)
                 max_time=float(arg[0])
                 threshold=0.99
@@ -456,7 +462,7 @@ def read(testdispload=0):
                 last_step=float(arg[test_coord])
                 first_step=0
                 for j in range(len(alllines)-2,0,-1):
-                    arg=alllines[j].replace('\n','').split(";")
+                    arg=alllines[j].replace('\n','').replace(",",";").split(";")
                     cur_time=float(arg[0])
                     cur_test=cur_time/max_time
                     if cur_test>threshold:
@@ -478,8 +484,8 @@ def read(testdispload=0):
                 f=open(thefile+".res.csv")
                 alllines=f.readlines()
                 if len(alllines)>1:
-                    all_arg=alllines[0].replace('\t','').replace(' ','').replace('\n','').split(";")
-                    all_arg2=alllines[1].replace('\t','').replace(' ','').replace('\n','').split(";")
+                    all_arg=alllines[0].replace('\t','').replace(' ','').replace('\n','').replace(",",";").split(";")
+                    all_arg2=alllines[1].replace('\t','').replace(' ','').replace('\n','').replace(",",";").split(";")
                     z=0
                     for arg in all_arg:
                         for v in params:
